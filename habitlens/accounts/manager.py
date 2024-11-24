@@ -20,10 +20,12 @@ class UserManager(BaseUserManager):
     #     return user
 
     def create_user(self, password, **extra_fields):
-
+        
         user = self.model(
+            
             **extra_fields
         )
+
         user.set_password(password)
         user.save(using=self._db)
         # token = Token.objects.get_or_create(user = user)
@@ -31,7 +33,7 @@ class UserManager(BaseUserManager):
 
     def create_superuser(self, password, **extra_fields):
         """
-        Create and save a superuser with the given sapid and password.
+        Create and save a superuser with the given name and password.
         """
         extra_fields.setdefault('is_staff', True)
         extra_fields.setdefault('is_superuser', True)

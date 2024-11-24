@@ -9,7 +9,7 @@ class User(AbstractUser):
 
     # extra fields
     email = models.EmailField(("Email Address"), primary_key=True, unique=True)
-    name = models.CharField(max_length = 30, unique=True, blank=True)
+    name = models.CharField(max_length = 30, blank=True)
     # grad_year = models.IntegerField(blank=True, null =True)
 
     USERNAME_FIELD = 'email'

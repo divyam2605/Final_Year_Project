@@ -16,9 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-import accounts.urls
+from allauth.account.views import confirm_email
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('accounts/', include(accounts.urls)),
+    # path('admin/', admin.site.urls),
+    path('authentication/', include('dj_rest_auth.urls')),
+    path('registration/', include('dj_rest_auth.registration.urls')),
+    path(r'registration/account-confirm-email/(?P<key>.+)/$', confirm_email, name='account_confirm_email')
+
 ]
