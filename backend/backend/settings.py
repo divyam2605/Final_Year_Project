@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-^#k&jk4aopkzh!+5z2rdsrlmiy5^qbxoe0tfn$aq$1pma1rhq1
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'demo',
     'corsheaders',
+    'tracklive',
 ]
 
 MIDDLEWARE = [
