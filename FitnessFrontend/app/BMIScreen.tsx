@@ -132,6 +132,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F3F4F6',
     padding: 20,
     justifyContent: 'center',
+    marginTop: 30
   },
   scrollViewContent: {
     paddingBottom: 20, // To make sure the last element is not hidden
