@@ -10,8 +10,8 @@ const pushuptracker = () => {
     const fetchStats = async () => {
         try {
             console.log("sent request")
-            const response = await axios.get("http://192.168.103.226:8000/tracklive/pushup_count");
-            setPushups(response.data.pushups);
+            const response = await axios.get("http://192.168.29.22:5000/pushup_count");
+            setPushups(response.data.pushup_count);
             setCalories(response.data.calories);
         } catch (error) {
             console.error("Failed to fetch pushup stats", error);
@@ -24,7 +24,7 @@ const pushuptracker = () => {
 
                 <View style={styles.videoContainer}>
                     <WebView
-                        source={{ uri: "http://192.168.103.226:8000/tracklive/video_feed" }}
+                        source={{ uri: "http://192.168.29.22:5000/video_feed" }}
                         style={styles.webView}
                     />
                 </View>
