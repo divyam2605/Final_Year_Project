@@ -19,7 +19,7 @@ export default function TabLayout() {
         <Tabs.Screen
           name="pushuptracker"
           options={{
-            title: 'Pushups',
+            title: 'Exercise Tracker Page',
             tabBarIcon: ({ color, size }) => (
               <MaterialIcons name="sports-gymnastics" size={24} color="black" />
 
@@ -30,18 +30,17 @@ export default function TabLayout() {
         <Tabs.Screen
           name="yourexercise"
           options={{
-            title: 'your exercise',
+            title: 'Your Exercises & Goals',
             tabBarIcon: ({ color, size }) => (
               <MaterialCommunityIcons name="bullseye-arrow" size={size} color={color} />
 
             ),
           }}
         />
-
         <Tabs.Screen
           name="addexercise"
           options={{
-            title: 'add exercise',
+            title: 'Add Exercise',
             tabBarIcon: ({ color, size }) => (
               <Ionicons name="add-circle" size={size} color={color} />
 
