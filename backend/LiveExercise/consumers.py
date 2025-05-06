@@ -1,8 +1,13 @@
+# consumers.py
 import base64
 import json
 import cv2
 import numpy as np
 from channels.generic.websocket import AsyncWebsocketConsumer
+from .exercise_session_handler import ExerciseSessionHandler
+
+# Create a persistent session handler (global instance)
+session_handler = ExerciseSessionHandler()
 
 class LiveExerciseConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -11,32 +16,35 @@ class LiveExerciseConsumer(AsyncWebsocketConsumer):
 
     async def disconnect(self, close_code):
         print("Disconnected")
+        session_handler.end_current_exercise()  # Optional: finalize session on disconnect
+        summary = session_handler.get_summary()
+        await self.send(text_data=json.dumps({"session_summary": summary}))
 
     async def receive(self, text_data=None, bytes_data=None):
-        data = json.loads(text_data)
-        frame_data = data.get("frame")
-
-        # Decode Base64 image
         try:
+            data = json.loads(text_data)
+            frame_data = data.get("frame")
+
+            if not frame_data:
+                await self.send(text_data=json.dumps({"error": "No frame data received"}))
+                return
+
+            # Decode Base64 frame
             img_array = np.frombuffer(base64.b64decode(frame_data), np.uint8)
             frame = cv2.imdecode(img_array, cv2.IMREAD_COLOR)
+
+            # Process and encode frame
+            processed_frame = session_handler.process(frame)
+            _, buffer = cv2.imencode('.jpg', processed_frame)
+            encoded = base64.b64encode(buffer).decode('utf-8')
+
+            await self.send(text_data=json.dumps({
+                "processed_frame": encoded,
+                "exercise": session_handler.current_prediction,
+                "count": session_handler.current_count
+            }))
+
         except Exception as e:
-            await self.send(text_data=json.dumps({"error": "Invalid frame format"}))
-            return
-
-        # Run your dummy function (to be integrated below)
-        processed_frame = run_inference_on_frame(frame)
-
-        # Encode processed frame back to Base64
-        _, buffer = cv2.imencode('.jpg', processed_frame)
-        encoded = base64.b64encode(buffer).decode('utf-8')
-
-        await self.send(text_data=json.dumps({
-            "processed_frame": encoded
-        }))
-
-def run_inference_on_frame(frame):
-    # TEMP: Draw dummy text to verify loopback works
-    cv2.putText(frame, "Processing...", (10, 50),
-                cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
-    return frame
+            await self.send(text_data=json.dumps({"error": f"Exception: {str(e)}"}))
+            
+            

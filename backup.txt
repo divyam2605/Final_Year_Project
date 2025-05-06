@@ -1,0 +1,6 @@
+DEV@LAPTOP-ROAHRH6T MINGW64 ~/Desktop/FinalYearProject/FinalWork/Final_Year_Project/backend (final)
+Yeh folder meh jaake run :
+redis-server
+daphne backend.asgi:application
+# or
+uvicorn backend.asgi:application --port 8000
