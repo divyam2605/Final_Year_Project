@@ -130,7 +130,7 @@ export default function YourExercise() {
 
   return (
     <ScrollView style={styles.container}>
-      <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('AddExercise' as never)}>
+      <TouchableOpacity style={styles.addButton} onPress={() => navigation.navigate('addexercise' as never)}>
         <Text style={styles.addButtonText}>+ Add Exercise</Text>
       </TouchableOpacity>
 

@@ -24,6 +24,16 @@ export default function TabLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="nutrition"
+        options={{
+          title: 'Nutrition',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name="food-variant" size={24} color="black" />
+
+          ),
+        }}
+      />
       
     </Tabs>
   );

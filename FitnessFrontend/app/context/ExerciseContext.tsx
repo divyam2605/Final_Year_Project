@@ -5,6 +5,8 @@ export type Exercise = {
   name: string;
   type: string;
   sets: { weight: number; reps: number; completed: boolean }[];
+  calories : number;
+  multiplier: number
 };
 
 type ContextType = {

@@ -152,13 +152,12 @@ import {
   View,
   Text,
   TextInput,
-  Button,
-  FlatList,
   TouchableOpacity,
   StyleSheet,
   Alert,
   KeyboardAvoidingView,
   Platform,
+  FlatList,
 } from 'react-native';
 import { useExercises } from '../context/ExerciseContext';
 import { useNavigation } from '@react-navigation/native';
@@ -167,7 +166,9 @@ import uuid from 'react-native-uuid';
 export default function AddExerciseScreen() {
   const [name, setName] = useState('');
   const [type, setType] = useState('');
+  const [multiplier, setMultiplier] = useState(0.3);
   const [sets, setSets] = useState([{ weight: 0, reps: 0, completed: false }]);
+
   const { addExercise } = useExercises();
   const navigation = useNavigation();
 
@@ -179,14 +180,21 @@ export default function AddExerciseScreen() {
     setSets(updated);
   };
 
+  const calculateCalories = () => {
+    const totalReps = sets.reduce((sum, s) => sum + (s.reps || 0), 0);
+    return (multiplier * totalReps).toFixed(1);
+  };
+
   const handleAddExercise = () => {
     if (!name.trim() || !type.trim()) {
       Alert.alert('Missing Info', 'Please enter both name and type.');
       return;
     }
 
-    addExercise({ id: generateId(), name, type, sets });
-    navigation.goBack();
+    const calories = parseFloat(calculateCalories());
+
+    addExercise({ id: generateId(), name, type, sets, calories, multiplier });
+    // navigation.goBack();
   };
 
   return (
@@ -208,6 +216,14 @@ export default function AddExerciseScreen() {
         style={styles.input}
         onChangeText={setType}
       />
+      <TextInput
+        placeholder="Calories Multiplier (e.g., 0.3)"
+        placeholderTextColor="#999"
+        style={styles.input}
+        keyboardType="numeric"
+        value={multiplier.toString()}
+        onChangeText={(text) => setMultiplier(parseFloat(text) || 0)}
+      />
 
       <Text style={styles.subtitle}>Sets</Text>
       <FlatList
@@ -220,22 +236,31 @@ export default function AddExerciseScreen() {
               placeholder="Weight (lbs)"
               placeholderTextColor="#aaa"
               style={styles.setInput}
-              onChangeText={text => updateSet(index, 'weight', parseInt(text) || 0)}
+              onChangeText={(text) => updateSet(index, 'weight', parseInt(text) || 0)}
+              defaultValue={item.weight.toString()}
             />
             <TextInput
               keyboardType="numeric"
               placeholder="Reps"
               placeholderTextColor="#aaa"
               style={styles.setInput}
-              onChangeText={text => updateSet(index, 'reps', parseInt(text) || 0)}
+              onChangeText={(text) => updateSet(index, 'reps', parseInt(text) || 0)}
+              defaultValue={item.reps.toString()}
             />
           </View>
         )}
       />
 
-      <TouchableOpacity style={styles.addSetButton} onPress={() => setSets([...sets, { weight: 0, reps: 0, completed: false }])}>
+      <TouchableOpacity
+        style={styles.addSetButton}
+        onPress={() => setSets([...sets, { weight: 0, reps: 0, completed: false }])}
+      >
         <Text style={styles.addSetText}>+ Add Set</Text>
       </TouchableOpacity>
+
+      <Text style={[styles.subtitle, { marginTop: 20 }]}>
+        Total Estimated Calories (All Sets): {calculateCalories()}
+      </Text>
 
       <TouchableOpacity style={styles.saveButton} onPress={handleAddExercise}>
         <Text style={styles.saveButtonText}>Save Exercise</Text>

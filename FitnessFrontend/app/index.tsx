@@ -29,11 +29,15 @@ import { StatusBar } from 'expo-status-bar';
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { FontAwesome5, MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 
+import CircularProgress from 'react-native-circular-progress-indicator';
+
 export default function Index() {
   return (
     <View style={styles.container}>
       <StatusBar style="dark" />
-      <Text style={styles.title}>🏋️‍♂️ Habitlens - Shape you Future</Text>
+      <Text style={styles.title}>🏋️‍♂️ Habitlens - See your Health, Shape you Future</Text>
+
+      <CircularProgress value={58} />
 
       <View style={styles.tileContainer}>
         <Link href="/exercise" asChild>
@@ -76,7 +80,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   title: {
-    fontSize: 26,
+    fontSize: 20,
     fontWeight: "700",
     textAlign: "center",
     marginBottom: 30,
